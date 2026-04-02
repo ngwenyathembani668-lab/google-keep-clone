@@ -13,11 +13,37 @@ class App {
         this.notes = []
     }
 
-    addNote({ title, text }) {
-        const id = Date.now();
+    addNote(id, { title, text }) {
+        // const id = Date.now();
         const newNote = new Note(id, title, text);
         this.notes = [...this.notes, newNote];
     }
+
+    editNote(id, { title, text }) {
+        this.notes.map(note => {
+            if (note.id == id) {
+                note.title = title;
+                note.text = text;
+            }
+            return note;
+        })
+    }
+
+
+    deleteNote(id) {
+        this.notes = this.notes.filter(note => note.id != id);
+    }
+
+    displayNotes() {
+        this.notes.map(note => console.log(
+            `
+            ID: ${note.id}
+            Title: ${note.title}
+            Text: ${note.text}
+            `
+        ))
+    }
+
 }
 
 
@@ -25,10 +51,29 @@ const note1 = {
     title: "Test note",
     text: "text."
 }
+const updatedNote = {
+    title: "Updated Test note",
+    text: "updated text"
+}
 
 const app = new App();
-app.addNote(note1);
+app.addNote(0, note1);
+app.addNote(1, note1);
+app.addNote(2, note1);
+app.addNote(3, note1);
 console.log(app.notes);
+
+setTimeout(() => {
+    app.editNote(2, updatedNote);
+    console.log(app.notes);
+}, 1000);
+
+app.deleteNote(2);
+
+app.displayNotes();
+
+// app.editNote(2, updatedNote);
+// console.log(app.notes);
 
 
 
