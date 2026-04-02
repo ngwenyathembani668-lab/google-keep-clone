@@ -1,6 +1,6 @@
 // sidebar function
 const sideBar = document.getElementById("sideBar");
-// const active = document.querySelector(".active");
+const active = document.querySelector(".active");
 const sideBarBtn = document.querySelector(".sideBarBtn");
 const firstSideBtn = document.querySelector(".firstSideBtn");
 const secSideBtn = document.querySelector(".secSideBtn");
@@ -11,6 +11,11 @@ const sideBarBtn_t = document.querySelector(".sideBarBtn_t");
 const sideBarBtn_th = document.querySelector(".sideBarBtn_th");
 const sideBarBtn_f = document.querySelector(".sideBarBtn_f");
 const sideBarBtn_fi = document.querySelector(".sideBarBtn_fi");
+const sideN = document.querySelector(".sideN");
+const sideR = document.querySelector(".sideR");
+const sideE = document.querySelector(".sideE");
+const sideA = document.querySelector(".sideA");
+const sideB = document.querySelector(".sideB");
 
 sideBar.addEventListener("mouseover", () => {
 
@@ -20,26 +25,36 @@ sideBar.addEventListener("mouseover", () => {
     thirdSideBtn.style.marginLeft = "0";
     fourthSideBtn.style.marginLeft = "0";
     fithSideBtn.style.marginLeft = "0";
-    sideBarBtn.style.paddingLeft = "20px";
+    active.style.paddingLeft = "30px";
     sideBarBtn_t.style.paddingLeft = "20px";
     sideBarBtn_th.style.paddingLeft = "20px";
     sideBarBtn_f.style.paddingLeft = "20px";
     sideBarBtn_fi.style.paddingLeft = "20px";
+    sideN.textContent = "Notes";
+    sideR.textContent = "Reminders";
+    sideE.textContent = "Edit";
+    sideA.textContent = "Archive";
+    sideB.textContent = "Bin";
 
 });
 
 sideBar.addEventListener("mouseout", () => {
 
-    sideBar.style.width = "120px";
+    sideBar.style.width = "90px";
     firstSideBtn.style.marginLeft = "20px";
     secSideBtn.style.marginLeft = "20px";
     thirdSideBtn.style.marginLeft = "20px";
     fourthSideBtn.style.marginLeft = "20px";
     fithSideBtn.style.marginLeft = "20px";
-    sideBarBtn.style.paddingLeft = "0";
+    active.style.paddingLeft = "0";
     sideBarBtn_t.style.paddingLeft = "0";
     sideBarBtn_th.style.paddingLeft = "0";
     sideBarBtn_f.style.paddingLeft = "0";
     sideBarBtn_fi.style.paddingLeft = "0";
+    sideN.textContent = "";
+    sideR.textContent = "";
+    sideE.textContent = "";
+    sideA.textContent = "";
+    sideB.textContent = "";
 
 });

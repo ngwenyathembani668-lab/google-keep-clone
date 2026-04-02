@@ -168,14 +168,16 @@ nav svg {
 
 /* sidebar!! */
 aside {
-    width: 120px;
+    width: 90px; 
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 10px 20px 0 0;
+    padding-top: 10px;
     transition: 0.9s;
-    background-color: #c4c8d1;
+    background-color: #fcfdff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
 }
+
 
 .sideBarBtn {
     display: flex;
@@ -184,8 +186,16 @@ aside {
     margin-left: 20px;
 }
 
+.sideBarBtnn {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    margin-left: 20px;
+}
+
 .sideBarBtn:hover {
-    background-color: #E2E6EA;
+    background-color: #F1F3F4;
+    transition: 0.9s ease; 
 }
 
 .sideBarSvg {
@@ -207,10 +217,33 @@ aside {
     background-color: #FEEFC3;
 }
 
-/* .firstSideBtn, .secSideBtn,
-.thirdSideBtn, .fourthBtn, .fithSideBtn {
+aside:hover .active {
+    width: 80px; 
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px; 
+    display: flex;
+    justify-content: flex-start;
+    /* padding: 0 0 0 20px;   */
+    /* margin-left: 0; */
+}
+
+aside:hover .sideBarBtnn {
     width: 100%;
-} */
+    /* margin-left: 20px; */
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    background-color: #FEEFC3
+}
+.secSideBtn,
+.thirdSideBtn, .fourthSideBtn, .fithSideBtn {
+    width: 100%;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+
+}
+
 
 .sideBarSvg svg {
     fill: #202124;
@@ -222,6 +255,22 @@ aside {
     fill: #202124;
     width: 30px;
     height: 30px;
+}
+
+.sideN, .sideB, .sideA, .sideE, .sideR {
+    font-size: 1.1rem;
+    color: #202124;
+    transition: 0.9s ease;
+    padding-top: 15px;
+    text-align: left; 
+}
+
+aside:hover .p-text {
+    display: flex;
+    text-align: left;
+    width: 120px;
+    align-items: flex-start;
+
 }
 
 
