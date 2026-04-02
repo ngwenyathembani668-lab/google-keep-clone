@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: "Roboto", sans-serif;
+    font-family: "Roboto", sans-serif; 
 }
 
 
@@ -171,7 +171,7 @@ aside {
     width: 90px; 
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 92.4vh;
     padding-top: 10px;
     transition: 0.9s;
     background-color: #fcfdff;
@@ -246,7 +246,7 @@ aside:hover .sideBarBtnn {
 
 
 .sideBarSvg svg {
-    fill: #202124;
+    fill: #65696D;
     width: 30px;
     height: 30px;
 }
@@ -260,7 +260,7 @@ aside:hover .sideBarBtnn {
 .sideN, .sideB, .sideA, .sideE, .sideR {
     font-size: 1.1rem;
     color: #202124;
-    transition: 0.9s ease;
+    transition: 1.8s ease;
     padding-top: 15px;
     text-align: left; 
 }
@@ -275,4 +275,59 @@ aside:hover .p-text {
 
 
 
-/* #202124 */
+/* main!! */
+main {
+    display: flex;
+}
+
+
+/* notes-section!! */
+.notes-section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.take-note {
+    display: flex;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    width: 43rem;
+    margin-top: 90px;
+    padding: 8px 20px;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.take-tools {
+    display: flex;
+    margin-left: auto;
+    gap: 10px;
+}
+
+.tools-svg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    width: 45px;
+    border-radius: 100%;
+}
+
+.tools-svg:hover {
+    background-color: #E2E6EA;
+    transition: 0.9s ease;
+    cursor: pointer;
+}
+
+.tools-svg svg {
+    fill: #65696D;
+    width: 25px;
+    height: 25px;
+}
+
+.take-input input {
+    width: 24rem;
+    padding: 5px;
+    border: none;
+    font-size: 1.1rem;
+}
