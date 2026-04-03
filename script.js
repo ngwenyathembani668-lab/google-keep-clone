@@ -119,6 +119,13 @@ sideBar.addEventListener("mouseover", () => {
     sideA.textContent = "Archive";
     sideB.textContent = "Bin";
 
+    // if (dark_light) {
+    //     // sideBar.style.backgroundColor = "#202124";
+    //     firstSideBtn.style.backgroundColor = "#41331C";
+    // }else {
+    //     firstSideBtn.style.backgroundColor = "#FEEFC3";
+    // }; 
+
 });
 
 sideBar.addEventListener("mouseout", () => {
@@ -140,4 +147,49 @@ sideBar.addEventListener("mouseout", () => {
     sideA.textContent = "";
     sideB.textContent = "";
 
+
+    // if (dark_light) {
+    //     // sideBar.style.backgroundColor = "#202124";
+    //     active.style.backgroundColor = " #FEEFC3";
+    // }else {
+    //     active.style.backgroundColor = "#41331C";
+    // }; 
+
+});
+
+
+// dark or light mode!!
+
+
+const dark = document.getElementById("dark");
+const light = document.getElementById("light");
+const sideBarBtnn = document.querySelector(".sideBarBtnn");
+const nav = document.getElementById("nav");
+
+dark.addEventListener("click", () => {
+    if (dark) {
+        document.body.style.backgroundColor = "#202124";
+        // dark.style.display = "none";
+        // light.style.display = "block";
+        sideBar.style.backgroundColor = "#202124";
+        sideA.style.color = "#e3e3e3";
+        sideB.style.color = "#e3e3e3";
+        sideE.style.color = "#e3e3e3";
+        sideN.style.color = "#e3e3e3";
+        sideR.style.color = "#e3e3e3";
+        nav.style.backgroundColor = "#202124";
+        // active.style.backgroundColor = "#41331C";
+    } else {
+        document.body.style.backgroundColor = "#fff";
+        // dark.style.display = "block";
+        // light.style.display = "none";
+        sideBar.style.backgroundColor = "#fff";
+        sideA.style.color = "#65696D";
+        sideB.style.color = "#65696D";
+        sideE.style.color = "#65696D";
+        sideN.style.color = "#65696D";
+        sideR.style.color = "#65696D";
+        // active.style.backgroundColor = "#FEEFC3";
+        // sideBarBtnn.style.backgroundColor = "#FEEFC3";
+    };
 });
