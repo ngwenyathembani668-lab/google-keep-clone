@@ -134,12 +134,7 @@ nav svg {
     cursor: pointer;
 } */
 
-#light {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* display: none; */
-}
+
 
 
 .account img {
@@ -155,6 +150,8 @@ nav svg {
     justify-content: center;
     align-items: center;
     border-radius: 100%;
+    border: none;
+    background-color: #fff;
 }
 
 .nav-options:hover {
@@ -167,6 +164,30 @@ nav svg {
     /* display: flex; */
 }
 
+#light {
+    display: none;
+}
+
+.dark-light-btn {
+    display: flex;
+    height: 50px;
+    width: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    border: none;
+    background-color: #fff;
+}
+
+.dark-light-btn:hover {
+    background-color: #E2E6EA;
+}
+
+.dark-light-btn svg {
+    width: 28px;
+    height: 28px;
+}
+
 .account {
     height: 50px;
     display: flex;
@@ -177,120 +198,60 @@ nav svg {
 
 /* sidebar!! */
 aside {
-    width: 90px;
     display: flex;
+    padding-top: 20px;
     flex-direction: column;
-    padding-top: 10px;
+    /* gap: 20px; */
+    width: 90px;
     height: calc(100vh - 72px);
-    transition: 0.9s;
-    background-color: #fcfdff;
+    /* align-items: center; */
+    /* background-color: #3c3c3c; */
+    transition: 1.1s ease;
+    /* justify-content: center;  */
 }
-
-aside:hover {
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
-}
-
 
 .sideBarBtn {
     display: flex;
-    gap: 40px;
+    align-items: center;
     width: 100%;
-    margin-left: 20px;
-}
-
-.sideBarBtnn {
-    display: flex;
+    padding-left: 30px;
     gap: 30px;
-    width: 100%;
-    margin-left: 20px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    height: 50px;
+    /* background-color: #DADCE0; */
 }
 
 .sideBarBtn:hover {
     background-color: #F1F3F4;
-    transition: 0.9s ease;
+    transition: 1s ease;
 }
 
-.sideBarSvg {
-    height: 50px;
-    width: 50px;
-    border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.svgBox svg {
+    fill: #5F6368;
+    width: 28px;
+    height: 28px;
+} 
+
+aside:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .active {
-    height: 50px;
-    width: 50px;
-    border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: #FEEFC3;
+} 
+
+.active:hover {
     background-color: #FEEFC3;
 }
 
-aside:hover .active {
-    width: 80px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
+.activeSvg {
     display: flex;
-    justify-content: flex-start;
-    /* padding: 0 0 0 20px;   */
-    /* margin-left: 0; */
-}
-
-aside:hover .sideBarBtnn {
-    width: 100%;
-    /* margin-left: 20px; */
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
-    background-color: #FEEFC3
-}
-
-.secSideBtn,
-.thirdSideBtn,
-.fourthSideBtn,
-.fithSideBtn {
-    width: 100%;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
-
+    justify-content: center;
+    align-items: center;
 }
 
 
-.sideBarSvg svg {
-    fill: #65696D;
-    width: 30px;
-    height: 30px;
-}
-
-.active svg {
-    fill: #202124;
-    width: 30px;
-    height: 30px;
-}
-
-.sideN,
-.sideB,
-.sideA,
-.sideE,
-.sideR {
-    font-size: 1.1rem;
-    color: #202124;
-    transition: 1.8s ease;
-    padding-top: 15px;
-    text-align: left;
-}
-
-aside:hover .p-text {
-    display: flex;
-    text-align: left;
-    width: 120px;
-    align-items: flex-start;
-
-}
 
 
 
@@ -359,8 +320,17 @@ main {
     width: 43rem;
     padding: 8px 10px;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
-    margin-top: 30px;
+    margin-top: 90px;
     border-radius: 10px;
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.expanded {
+    display: block; 
 }
 
 .sec-top {
@@ -402,6 +372,7 @@ main {
     padding: 4px 10px;
     margin-top: 8px;
 }
+
 
 .sec-middle input {
     font-size: 0.99rem;
@@ -550,3 +521,11 @@ main {
     width: 24px;
     height: 24px;
 }
+
+#light {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ 
