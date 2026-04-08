@@ -18,9 +18,15 @@ class App {
         this.$noteTitle = document.querySelector("#note-title");
         this.$noteText = document.querySelector("#note-text");
         this.$notes = document.querySelector(".notes");
+        this.note = document.querySelector(".notes-box");
         this.$submit = document.getElementById("sec-form");
+        this.$modal = document.querySelector(".modal-box");
+        this.$modalForm = document.querySelector("#modal-form");
+        this.$modalTitle = document.querySelector("#modal-title");
+        this.$modalText = document.querySelector("#modal-text");
 
         this.addEventListeners();
+        this.displayNotes();
 
     };
 
@@ -30,6 +36,9 @@ class App {
     addEventListeners() {
         document.body.addEventListener("click", (event) => {
             this.handleFormClick(event);
+            this.openModal(event);
+            this.closeModal(event);
+
         });
 
         this.$submit.addEventListener("submit", (event) => {
@@ -37,10 +46,10 @@ class App {
             const title = this.$noteTitle.value;
             const text = this.$noteText.value;
             this.addNote({ title, text });
-            this.closeActiveForm(); 
+            this.closeActiveForm();
         });
 
-    }; 
+    };
 
 
     handleFormClick(event) {
@@ -71,6 +80,24 @@ class App {
         this.$noteText.value = "";
         this.$noteTitle.value = "";
     };
+
+
+    openModal(event) {
+        const $selectedNote = event.target.closest(".note-box");
+        if ($selectedNote) {
+            this.$modalTitle.value = $selectedNote.children[1].innerHTML;
+            this.$modalText.value = $selectedNote.children[2].innerHTML;
+            this.$modal.classList.add("open-modal");
+            // console.log("j")
+        }
+    }
+
+    closeModal(event) {
+        const isModalFormClickedOn = this.$modalForm.contains(event.target);
+        if (!isModalFormClickedOn && this.$modal.classList.contains("open-modal")) {
+            this.$modal.classList.remove("open-modal");
+        }
+    }
 
 
 
@@ -111,7 +138,7 @@ class App {
         this.$notes.innerHTML = this.notes.map(note =>
             `
             
-            <div id="${note.id}" class="notes-box border">
+            <div id="${note.id}" class="notes-box border note">
 
                     <div class="notes-top">
 
@@ -218,7 +245,7 @@ const app = new App();
 // app.addNote(1, note1);
 // app.addNote(2, note1);
 // app.addNote(3, note1);
-console.log(app.notes); 
+console.log(app.notes);
 
 setTimeout(() => {
     app.editNote(2, updatedNote);
