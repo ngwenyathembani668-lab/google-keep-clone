@@ -231,7 +231,7 @@ aside {
     fill: #5F6368;
     width: 28px;
     height: 28px;
-} 
+}
 
 aside:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -239,7 +239,7 @@ aside:hover {
 
 .active {
     background-color: #FEEFC3;
-} 
+}
 
 .active:hover {
     background-color: #FEEFC3;
@@ -330,7 +330,7 @@ main {
 }
 
 .expanded {
-    display: block; 
+    display: block;
 }
 
 .sec-top {
@@ -445,15 +445,48 @@ main {
     border: 2.3px solid #E0E0E0;
     border-radius: 8px;
     gap: 35px;
+    /* display: none; */
 }
+
+/* .note {
+    display: flex;
+    flex-direction: column;
+    width: 17rem;
+    padding: 0 10px 10px 10px;
+    border: 2.3px solid #E0E0E0;
+    border-radius: 8px;
+    gap: 35px;
+} */
+
+/* #notes {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 2%;
+    width: 100%;
+} */
 
 .notes-box:hover {
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
     transition: 0.9s ease;
 }
 
-.displayed-notes {
+/* .displayed-notes {
     margin-top: 50px;
+    display: flex;
+} */
+
+
+.displayed-notes {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 2%;
+    width: 100%;
 }
 
 .notes-top {
@@ -527,5 +560,3 @@ main {
     align-items: center;
     justify-content: center;
 }
-
- 
