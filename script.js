@@ -13,34 +13,66 @@ class App {
         this.notes = [];
 
 
-        this.$activeForm = document.querySelector(".active-form");
+        this.$activeForm = document.querySelector("#sec-form");
         this.$inactiveForm = document.querySelector(".inactive-form");
         this.$noteTitle = document.querySelector("#note-title");
         this.$noteText = document.querySelector("#note-text");
+        this.$notes = document.querySelector(".notes");
+        this.$submit = document.getElementById("sec-form");
 
-        // this.addEventListeners();
+        this.addEventListeners();
 
     };
 
 
 
 
-    // addEventListeners() {
-    //     document.body.addEventListener("click", (event) => {
-    //         this.handleFormClick(event);
-    //     });
-    // }
+    addEventListeners() {
+        document.body.addEventListener("click", (event) => {
+            this.handleFormClick(event);
+        });
 
+        this.$submit.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const title = this.$noteTitle.value;
+            const text = this.$noteText.value;
+            this.addNote({ title, text });
+            this.closeActiveForm(); 
+        });
+
+    }; 
+
+
+    handleFormClick(event) {
+        const isActiveFormClickedOn = this.$activeForm.contains(event.target);
+        const isInactiveFormClickedOn = this.$inactiveForm.contains(event.target);
+        const title = this.$noteTitle.value;
+        const text = this.$noteText.value;
+
+        if (isInactiveFormClickedOn) {
+            this.openActiveForm();
+        } else if (!isInactiveFormClickedOn && !isActiveFormClickedOn) {
+            this.addNote({ title, text });
+            this.closeActiveForm();
+        }
+    }
 
 
     openActiveForm() {
-        this.$noteText.focus()
+        this.$inactiveForm.classList.add("hidden");
+        this.$activeForm.classList.add("expanded");
+        this.$noteText.focus();
     }
 
     closeActiveForm() {
+
+        this.$inactiveForm.classList.remove("hidden");
+        this.$activeForm.classList.remove("expanded");
         this.$noteText.value = "";
         this.$noteTitle.value = "";
-    }
+    };
+
+
 
     addNote({ title, text }) {
 
@@ -76,283 +108,10 @@ class App {
     };
 
     displayNotes() {
-        this.notes.map(note => console.log(
+        this.$notes.innerHTML = this.notes.map(note =>
             `
-            ID: ${note.id}
-            Title: ${note.title}
-            Text: ${note.text}
-            `
-        ));
-    };
-
-
-};
-
-
-
-
-const note1 = {
-    title: "Test note",
-    text: "text."
-};
-const updatedNote = {
-    title: "Updated Test note",
-    text: "updated text"
-};
-
-const app = new App();
-app.addNote(0, note1);
-app.addNote(1, note1);
-app.addNote(2, note1);
-app.addNote(3, note1);
-console.log(app.notes);
-
-setTimeout(() => {
-    app.editNote(2, updatedNote);
-    console.log(app.notes);
-}, 1000);
-
-app.deleteNote(2);
-
-app.displayNotes();
-
-// app.editNote(2, updatedNote);
-// console.log(app.notes);
-
-
-
-
-
-
-
-// sidebar function
-const sideBar = document.getElementById("sideBar");
-const active = document.querySelector(".active");
-const sideBarBtn = document.querySelectorAll(".sideBarBtn");
-const sideN = document.querySelector(".sideN");
-const sideR = document.querySelector(".sideR");
-const sideE = document.querySelector(".sideE");
-const sideA = document.querySelector(".sideA");
-const sideB = document.querySelector(".sideB");
-const pText = document.querySelectorAll(".pText")
-
-sideBar.addEventListener("mouseover", () => {
-
-    sideBar.style.width = "350px";
-    // firstSideBtn.style.marginLeft = "0";
-    // secSideBtn.style.marginLeft = "0";
-    // thirdSideBtn.style.marginLeft = "0";
-    // fourthSideBtn.style.marginLeft = "0";
-    // fithSideBtn.style.marginLeft = "0";
-    // active.style.paddingLeft = "30px";
-    // sideBarBtn_t.style.paddingLeft = "20px";
-    // sideBarBtn_th.style.paddingLeft = "20px";
-    // sideBarBtn_f.style.paddingLeft = "20px";
-    // sideBarBtn_fi.style.paddingLeft = "20px";
-    sideN.textContent = "Notes";
-    sideR.textContent = "Reminders";
-    sideE.textContent = "Edit";
-    sideA.textContent = "Archive";
-    sideB.textContent = "Bin";
-
-
-    // if (dark_light) {
-    //     // sideBar.style.backgroundColor = "#202124";
-    //     firstSideBtn.style.backgroundColor = "#41331C";
-    // }else {
-    //     firstSideBtn.style.backgroundColor = "#FEEFC3";
-    // }; 
-
-});
-
-sideBar.addEventListener("mouseout", () => {
-
-    sideBar.style.width = "90px";
-    // firstSideBtn.style.marginLeft = "20px";
-    // secSideBtn.style.marginLeft = "20px";
-    // thirdSideBtn.style.marginLeft = "20px";
-    // fourthSideBtn.style.marginLeft = "20px";
-    // fithSideBtn.style.marginLeft = "20px";
-    // active.style.paddingLeft = "0";
-    // firstSideBtn.style.paddingLeft = "0";
-    // sideBarBtn_t.style.paddingLeft = "0";
-    // sideBarBtn_th.style.paddingLeft = "0";
-    // sideBarBtn_f.style.paddingLeft = "0";
-    // sideBarBtn_fi.style.paddingLeft = "0";
-    sideN.textContent = "";
-    sideR.textContent = "";
-    sideE.textContent = "";
-    sideA.textContent = "";
-    sideB.textContent = "";
-
-
-
-    // if (dark_light) {
-    //     // sideBar.style.backgroundColor = "#202124";
-    //     active.style.backgroundColor = " #FEEFC3";
-    // }else {
-    //     active.style.backgroundColor = "#41331C";
-    // }; 
-
-});
-
-
-// dark or light mode!!
-
-
-const dark = document.getElementById("dark");
-const light = document.getElementById("light");
-const nav = document.getElementById("nav");
-const search_f = document.querySelectorAll(".search_f");
-const search = document.querySelectorAll(".searchID");
-const navOptions = document.querySelectorAll(".nav_options_t");
-const nav_options = document.querySelectorAll(".nav-options");
-const border = document.querySelectorAll(".border");
-const hSvg = document.querySelectorAll(".hSvg");
-const keep = document.querySelector(".keep");
-const navSearch = document.getElementById("navSearch");
-const sidePTags = document.querySelectorAll(".sidePTags");
-const checkMark = document.querySelector(".checkMark");
-const toolsDark = document.querySelectorAll(".toolsDark");
-
-dark.addEventListener("click", () => {
-
-
-    document.body.style.backgroundColor = "#202124";
-    dark.style.display = "none";
-    // light.style.display = "block";
-    nav.style.backgroundColor = "#202124";
-    sideBar.style.backgroundColor = "#202124";
-    dark.style.backgroundColor = "#202124";
-    light.style.backgroundColor = "#202124";
-
-
-    navOptions.forEach(option => {
-        option.style.backgroundColor = "#202124";
-        option.style.transition = "background-color 0.25s ease";
-
-        if (!option.dataset.darkHoverInitialized) {
-            option.dataset.darkHoverInitialized = "true";
-
-            option.addEventListener("mouseenter", () => {
-                option.style.backgroundColor = "#2C2E30";
-            });
-
-            option.addEventListener("mouseleave", () => {
-                option.style.backgroundColor = "#202124";
-            });
-        }
-    });
-
-    search.forEach(formTags => {
-        formTags.style.backgroundColor = "#202124";
-    });
-
-    border.forEach(line => {
-        line.style.border = "2px solid #5F6368";
-    });
-
-    nav.style.borderBottom = "2px solid #5F6368";
-
-    // document.hSvg.style.fill = "#99999A";
-
-    hSvg.forEach(rightSvg => {
-        rightSvg.style.fill = "#99999A";
-    });
-
-    keep.style.color = "#E3E3E3";
-
-    search_f.forEach(hSearch => {
-        hSearch.style.backgroundColor = "#282A2C";
-        hSearch.style.color = "#C4C7C5";
-    });
-
-    sidePTags.forEach(pTag => {
-        pTag.style.color = "#E8EAED";
-    })
-
-    active.style.backgroundColor = "#41331C";
-
-    checkMark.style.fill = "#fff";
-
-    // toolsDark.style.backgroundColor = "#303135";
-
-
-    toolsDark.forEach(options => {
-        // options.style.backgroundColor = "#202124";
-        options.style.transition = "background-color 0.25s ease";
-
-        if (!options.dataset.darkHoverInitialized) {
-            options.dataset.darkHoverInitialized = "true";
-
-            options.addEventListener("mouseenter", () => {
-                options.style.backgroundColor = "#303135";
-            });
-
-            options.addEventListener("mouseleave", () => {
-                options.style.backgroundColor = "#202124";
-            });
-        }
-    });
-
-
-    sideBarBtn.forEach(sides => {
-        // options.style.backgroundColor = "#202124";
-        sides.style.transition = "background-color 0.25s ease";
-
-        if (!sides.dataset.darkHoverInitialized) {
-            sides.dataset.darkHoverInitialized = "true";
-
-            sides.addEventListener("mouseenter", () => {
-                sides.style.backgroundColor = "#28292C";
-            });
-
-            sides.addEventListener("mouseleave", () => {
-                sides.style.backgroundColor = "#202124";
-            });
-        }
-    });
-
-
-});
-
-
-const takeNote = document.getElementById("take-note");
-const secForm = document.getElementById("sec-form");
-const tTitle = document.querySelector(".tTitle");
-const formTitle = document.getElementById("note-title");
-const formText = document.getElementById("note-text");
-const noteContainer = document.querySelector(".notes-box");
-let formExpanded = false;
-
-takeNote.addEventListener("click", () => {
-
-    takeNote.classList.add("hidden");
-    secForm.classList.add("expanded");
-    tTitle.focus();
-
-
-    formExpanded = true;
-
-});
-
-document.body.addEventListener("click", (event) => {
-
-    if (!secForm.contains(event.target) && !takeNote.contains(event.target)) {
-
-        const note = {
-            title: formTitle.value.trim(),
-            text: formText.value.trim()
-        };
-
-        if (note.title || note.text) {
-
-            const noteEL = document.createElement("div");
-            noteEL.classList.add("note");
-
-            noteEL.innerHTML = `
-                
-            <div class="notes-box border">
+            
+            <div id="${note.id}" class="notes-box border">
 
                     <div class="notes-top">
 
@@ -365,7 +124,10 @@ document.body.addEventListener("click", (event) => {
                         </div>
 
                         <div class="note-input">
-                            <input class="searchID" type="text" placeholder="${formText.value}">
+
+                            <div class="title">${note.title} </div>
+                            <div class="text">${note.text}</div>
+
                         </div>
 
                         <div class="pin-note toolsDark">
@@ -378,7 +140,7 @@ document.body.addEventListener("click", (event) => {
 
                     </div>
 
-                    <div class="notes-bottom">
+                    <div id="nTools" class="notes-bottom">
 
                         <div class="notes-tools toolsDark">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -430,24 +192,93 @@ document.body.addEventListener("click", (event) => {
 
                     </div>
 
-            </div>
+                </div>
 
-            
-            
-            `;
-
-            noteContainer.appendChild(noteEL);
-        };
-
-        secForm.classList.remove("expanded");
-        secForm.classList.add("hidden");
-        takeNote.classList.remove("hidden");
-
-        formExpanded = false;
-
-        formTitle.value = "";
-        formText.value = "";
+            `
+        ).join("");
     };
 
+
+};
+
+
+
+
+const note1 = {
+    title: "Test note",
+    text: "text."
+};
+const updatedNote = {
+    title: "Updated Test note",
+    text: "updated text"
+};
+
+const app = new App();
+// app.addNote(0, note1);
+// app.addNote(1, note1);
+// app.addNote(2, note1);
+// app.addNote(3, note1);
+console.log(app.notes); 
+
+setTimeout(() => {
+    app.editNote(2, updatedNote);
+    console.log(app.notes);
+}, 1000);
+
+app.deleteNote(2);
+
+app.displayNotes();
+
+app.editNote(2, updatedNote);
+console.log(app.notes);
+
+
+
+
+
+
+
+// sidebar function
+const sideBar = document.getElementById("sideBar");
+const active = document.querySelector(".active");
+const sideBarBtn = document.querySelectorAll(".sideBarBtn");
+const sideN = document.querySelector(".sideN");
+const sideR = document.querySelector(".sideR");
+const sideE = document.querySelector(".sideE");
+const sideA = document.querySelector(".sideA");
+const sideB = document.querySelector(".sideB");
+const pText = document.querySelectorAll(".pText")
+
+sideBar.addEventListener("mouseover", () => {
+
+    sideBar.style.width = "350px";
+    sideN.textContent = "Notes";
+    sideR.textContent = "Reminders";
+    sideE.textContent = "Edit";
+    sideA.textContent = "Archive";
+    sideB.textContent = "Bin";
+
 });
+
+sideBar.addEventListener("mouseout", () => {
+
+    sideBar.style.width = "90px";
+    sideN.textContent = "";
+    sideR.textContent = "";
+    sideE.textContent = "";
+    sideA.textContent = "";
+    sideB.textContent = "";
+
+
+
+
+
+});
+
+
+
+
+
+
+
 
