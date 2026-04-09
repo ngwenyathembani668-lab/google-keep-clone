@@ -9,7 +9,10 @@
 
 body {
     font-family: "Roboto", sans-serif;
-    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -564,17 +567,29 @@ main {
 
 
 /* modal!! */
+.open-modal {
+    display: block;
+}
+
 .modal-box {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.46);
-    position: absolute;
-    top: 0;
-    left: 0;
     display: flex;
     justify-content: center;
-    padding: 5% 0 0 0;
+    align-items: center; 
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.46);
+    position: fixed;
+    /* top: 50%;
+    left: 50%; */
+    top: 0; 
+    left: 0; 
+    /* transform: translate(-50%, -50%); */
+     
+    padding: 5% 65.7% 0 34%; 
     display: none;
+
+    /* visibility: hidden; */
+    
 }
 
 .modal {
@@ -588,8 +603,7 @@ main {
     z-index: 100;
     display: flex;
     flex-direction: column;
-    /* opacity: 100%; */
-    /* display: none; */
+    /* margin: 0% 40% 0% 60%;  */
 }
 
 #form-foot {
@@ -603,3 +617,11 @@ main {
 /* #modalform {
     z-index: 100;
 } */
+
+.modal-box div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 40% 0 60%; 
+
+}

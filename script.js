@@ -11,19 +11,20 @@ class Note {
 class App {
     constructor() {
         this.notes = [];
-
+        this.loadNotes();
 
         this.$activeForm = document.querySelector("#sec-form");
         this.$inactiveForm = document.querySelector(".inactive-form");
         this.$noteTitle = document.querySelector("#note-title");
         this.$noteText = document.querySelector("#note-text");
         this.$notes = document.querySelector(".notes");
-        this.note = document.querySelector(".notes-box");
+        this.note = document.querySelector(".note");
         this.$submit = document.getElementById("sec-form");
-        this.$modal = document.querySelector(".modal-box");
+        this.$modal = document.getElementById("modal-box");
         this.$modalForm = document.querySelector("#modal-form");
         this.$modalTitle = document.querySelector("#modal-title");
         this.$modalText = document.querySelector("#modal-text");
+        this.currentNoteId = null;
 
         this.addEventListeners();
         this.displayNotes();
@@ -81,50 +82,90 @@ class App {
         this.$noteTitle.value = "";
     };
 
+    loadNotes() {
+        const data = localStorage.getItem("googleKeepNotes");
+        if (!data) return;
+
+        try {
+            const parsed = JSON.parse(data);
+            if (Array.isArray(parsed)) {
+                this.notes = parsed;
+            }
+        } catch (error) {
+            console.error("Failed to load notes from localStorage", error);
+        }
+    };
+
+    saveNotes() {
+        localStorage.setItem("googleKeepNotes", JSON.stringify(this.notes));
+    };
+
+
+    // openModal(event) {
+    //     const $selectedNote = event.target.closest(".note");
+    //     if ($selectedNote) { 
+    //         this.$modalTitle.value = $selectedNote.children[6].innerHTML;
+    //         this.$modalText.value = $selectedNote.children[7].innerHTML;
+    //         this.$modal.classList.add("open-modal");
+    //         console.log("j")
+    //     };
+    // };
 
     openModal(event) {
-        const $selectedNote = event.target.closest(".note-box");
+        const $selectedNote = event.target.closest(".note");
         if ($selectedNote) {
-            this.$modalTitle.value = $selectedNote.children[1].innerHTML;
-            this.$modalText.value = $selectedNote.children[2].innerHTML;
+            const titleEl = $selectedNote.querySelector(".title");
+            const textEl = $selectedNote.querySelector(".text");
+
+            this.currentNoteId = $selectedNote.id;
+            this.$modalTitle.value = titleEl ? titleEl.innerHTML : "";
+            this.$modalText.value = textEl ? textEl.innerHTML : "";
+
             this.$modal.classList.add("open-modal");
-            // console.log("j")
+            console.log("Modal opened");
         }
-    }
+    };
+
 
     closeModal(event) {
         const isModalFormClickedOn = this.$modalForm.contains(event.target);
-        if (!isModalFormClickedOn && this.$modal.classList.contains("open-modal")) {
+        const isModalCloseButton = event.target.closest(".close-btn") && this.$modalForm.contains(event.target);
+
+        if (this.$modal.classList.contains("open-modal") && (event.target === this.$modal || isModalCloseButton)) {
+            this.saveModalChanges();
             this.$modal.classList.remove("open-modal");
+            this.currentNoteId = null;
         }
-    }
-
-
-
-    addNote({ title, text }) {
-
-        const newNote = new Note(cuid(), title, text);
-        this.notes = [...this.notes, newNote];
-        this.displayNotes();
-
     };
+
+    saveModalChanges() {
+        if (!this.currentNoteId) return;
+        const title = this.$modalTitle.value;
+        const text = this.$modalText.value;
+
+        this.editNote(this.currentNoteId, { title, text });
+        this.displayNotes();
+    };
+
+
 
     addNote({ title, text }) {
         if (text != "") {
             const newNote = new Note(cuid(), title, text);
             this.notes = [...this.notes, newNote];
             this.displayNotes();
+            this.saveNotes();
         }
-    }
+    };
 
     editNote(id, { title, text }) {
-        this.notes.map(note => {
+        this.notes = this.notes.map(note => {
             if (note.id == id) {
-                note.title = title;
-                note.text = text;
-            };
+                return new Note(note.id, title, text);
+            }
             return note;
         });
+        this.saveNotes();
     };
 
 
@@ -132,6 +173,7 @@ class App {
 
     deleteNote(id) {
         this.notes = this.notes.filter(note => note.id != id);
+        this.saveNotes();
     };
 
     displayNotes() {
@@ -241,23 +283,22 @@ const updatedNote = {
 };
 
 const app = new App();
-// app.addNote(0, note1);
 // app.addNote(1, note1);
 // app.addNote(2, note1);
 // app.addNote(3, note1);
-console.log(app.notes);
+// console.log(app.notes);
 
-setTimeout(() => {
-    app.editNote(2, updatedNote);
-    console.log(app.notes);
-}, 1000);
+// setTimeout(() => {
+//     app.editNote(2, updatedNote);
+//     console.log(app.notes);
+// }, 1000);
 
-app.deleteNote(2);
+// app.deleteNote(2);
 
-app.displayNotes();
+// app.displayNotes();
 
-app.editNote(2, updatedNote);
-console.log(app.notes);
+// app.editNote(2, updatedNote);
+// console.log(app.notes);
 
 
 
@@ -296,12 +337,7 @@ sideBar.addEventListener("mouseout", () => {
     sideA.textContent = "";
     sideB.textContent = "";
 
-
-
-
-
 });
-
 
 
 
