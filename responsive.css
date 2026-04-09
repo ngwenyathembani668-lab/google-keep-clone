@@ -1,0 +1,33 @@
+@media (min-width: 1600px) {
+  
+    .modal-box {
+        padding: 5% 57% 0 31%;
+    }
+
+}
+
+
+@media (min-width: 1200px) {
+ 
+    .middle-div form {
+        width: 27rem;
+    }
+
+    .left-div {
+        margin-right: 40px;
+    }
+
+}
+
+
+@media (min-width: 900px) {
+  
+    .middle-div form {
+        width: 16rem;
+    }
+
+    .left-div {
+        margin-right: 25px;
+    }
+
+}
