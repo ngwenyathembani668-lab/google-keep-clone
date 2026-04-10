@@ -50,6 +50,11 @@ body.dark-mode select {
     border-color: #374151;
 }
 
+body:not(.dark-mode) #modal-form input,
+body:not(.dark-mode) #sec-form input {
+    background-color: #fff;
+}
+
 body.dark-mode .check svg {
     fill: #fff;
 }
