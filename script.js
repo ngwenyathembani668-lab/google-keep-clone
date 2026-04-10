@@ -1,9 +1,12 @@
 // main class!!
 class Note {
-    constructor(id, title, text) {
+    constructor(id, title, text, reminderDateTime = null, reminderActive = false, reminderTriggered = false) {
         this.id = id;
         this.title = title;
         this.text = text;
+        this.reminderDateTime = reminderDateTime;
+        this.reminderActive = reminderActive;
+        this.reminderTriggered = reminderTriggered;
     }
 };
 
@@ -17,17 +20,26 @@ class App {
         this.$inactiveForm = document.querySelector(".inactive-form");
         this.$noteTitle = document.querySelector("#note-title");
         this.$noteText = document.querySelector("#note-text");
+        this.$noteReminderActive = document.querySelector("#note-reminder-active");
+        this.$noteReminderDateTime = document.querySelector("#note-reminder-datetime");
         this.$notes = document.querySelector(".notes");
         this.note = document.querySelector(".note");
         this.$submit = document.getElementById("sec-form");
+        this.$closeFormButton = document.querySelector("#sec-form .close-btn button");
         this.$modal = document.getElementById("modal-box");
         this.$modalForm = document.querySelector("#modal-form");
         this.$modalTitle = document.querySelector("#modal-title");
         this.$modalText = document.querySelector("#modal-text");
+        this.$modalReminderActive = document.querySelector("#modal-reminder-active");
+        this.$modalReminderDateTime = document.querySelector("#modal-reminder-datetime");
         this.currentNoteId = null;
+        this.$toastContainer = null;
 
         this.addEventListeners();
         this.displayNotes();
+        this.displayUpcomingReminders();
+        this.initReminderPermission();
+        this.startReminderScheduler();
 
     };
 
@@ -36,17 +48,45 @@ class App {
 
     addEventListeners() {
         document.body.addEventListener("click", (event) => {
+            if (this.handleArchiveClick(event)) {
+                return;
+            }
+
             this.handleFormClick(event);
             this.openModal(event);
             this.closeModal(event);
 
         });
 
+        if (this.$closeFormButton) {
+            this.$closeFormButton.addEventListener("click", (event) => {
+                event.stopPropagation();
+                this.closeActiveForm();
+            });
+        }
+
+        if (this.$noteReminderActive) {
+            this.$noteReminderActive.addEventListener("change", () => {
+                if (this.$noteReminderDateTime) {
+                    this.$noteReminderDateTime.disabled = !this.$noteReminderActive.checked;
+                }
+            });
+        }
+
+        if (this.$modalReminderActive) {
+            this.$modalReminderActive.addEventListener("change", () => {
+                if (this.$modalReminderDateTime) {
+                    this.$modalReminderDateTime.disabled = !this.$modalReminderActive.checked;
+                }
+            });
+        }
+
         this.$submit.addEventListener("submit", (event) => {
             event.preventDefault();
             const title = this.$noteTitle.value;
             const text = this.$noteText.value;
-            this.addNote({ title, text });
+            const { reminderDateTime, reminderActive } = this.getReminderInputValues(true);
+            this.addNote({ title, text, reminderDateTime, reminderActive });
             this.closeActiveForm();
         });
 
@@ -67,6 +107,23 @@ class App {
         }
     }
 
+    handleArchiveClick(event) {
+        const archiveButton = event.target.closest(".archive-btn");
+        if (!archiveButton) return false;
+
+        event.stopPropagation();
+        const noteElement = archiveButton.closest(".note");
+        if (!noteElement) return false;
+
+        const noteId = noteElement.id;
+        if (!noteId) return false;
+
+        this.deleteNote(noteId);
+        this.displayNotes();
+        this.displayUpcomingReminders();
+        return true;
+    }
+
 
     openActiveForm() {
         this.$inactiveForm.classList.add("hidden");
@@ -80,6 +137,14 @@ class App {
         this.$activeForm.classList.remove("expanded");
         this.$noteText.value = "";
         this.$noteTitle.value = "";
+
+        if (this.$noteReminderActive) {
+            this.$noteReminderActive.checked = false;
+        }
+        if (this.$noteReminderDateTime) {
+            this.$noteReminderDateTime.value = "";
+            this.$noteReminderDateTime.disabled = true;
+        }
     };
 
     loadNotes() {
@@ -89,7 +154,14 @@ class App {
         try {
             const parsed = JSON.parse(data);
             if (Array.isArray(parsed)) {
-                this.notes = parsed;
+                this.notes = parsed.map(note => new Note(
+                    note.id,
+                    note.title,
+                    note.text,
+                    note.reminderDateTime ? new Date(note.reminderDateTime) : null,
+                    Boolean(note.reminderActive),
+                    Boolean(note.reminderTriggered)
+                ));
             }
         } catch (error) {
             console.error("Failed to load notes from localStorage", error);
@@ -98,6 +170,116 @@ class App {
 
     saveNotes() {
         localStorage.setItem("googleKeepNotes", JSON.stringify(this.notes));
+    };
+
+    initReminderPermission() {
+        if ("Notification" in window && Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+    };
+
+    startReminderScheduler() {
+        this.checkReminders();
+        setInterval(() => this.checkReminders(), 30000);
+    };
+
+    checkReminders() {
+        const now = new Date();
+        let updated = false;
+
+        this.notes.forEach(note => {
+            if (note.reminderActive && note.reminderDateTime instanceof Date && !note.reminderTriggered && now >= note.reminderDateTime) {
+                note.reminderTriggered = true;
+                updated = true;
+                this.notifyReminder(note);
+            }
+        });
+
+        if (updated) {
+            this.saveNotes();
+            this.displayNotes();
+            this.displayUpcomingReminders();
+        }
+    };
+
+    notifyReminder(note) {
+        const reminderLabel = note.title ? `${note.title}` : "Reminder";
+        const message = `${reminderLabel} is due now.`;
+        this.showReminderToast(message);
+
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("Keep Clone Reminder", { body: message });
+        }
+    };
+
+    showReminderToast(message) {
+        if (!this.$toastContainer) {
+            this.$toastContainer = document.createElement("div");
+            this.$toastContainer.id = "toast-container";
+            document.body.appendChild(this.$toastContainer);
+        }
+
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        this.$toastContainer.appendChild(toast);
+
+        window.requestAnimationFrame(() => toast.classList.add("visible"));
+        setTimeout(() => toast.classList.remove("visible"), 3500);
+        setTimeout(() => toast.remove(), 4000);
+    };
+
+    formatDateTimeForInput(date) {
+        if (!date) return "";
+        const pad = value => String(value).padStart(2, "0");
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        const hours = pad(date.getHours());
+        const minutes = pad(date.getMinutes());
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
+    getReminderInputValues(isCreateForm = true) {
+        const activeElement = isCreateForm ? this.$noteReminderActive : this.$modalReminderActive;
+        const dateTimeElement = isCreateForm ? this.$noteReminderDateTime : this.$modalReminderDateTime;
+
+        const reminderActive = activeElement ? activeElement.checked : false;
+        const reminderDateTime = dateTimeElement && dateTimeElement.value ? new Date(dateTimeElement.value) : null;
+        return { reminderActive, reminderDateTime };
+    };
+
+    setModalReminderValues(note) {
+        if (!this.$modalReminderActive || !this.$modalReminderDateTime) return;
+
+        this.$modalReminderActive.checked = Boolean(note.reminderActive);
+        this.$modalReminderDateTime.value = note.reminderDateTime ? this.formatDateTimeForInput(new Date(note.reminderDateTime)) : "";
+        this.$modalReminderDateTime.disabled = !note.reminderActive;
+    };
+
+    displayUpcomingReminders() {
+        const container = document.getElementById("upcoming-reminders");
+        if (!container) return;
+
+        const upcomingList = container.querySelector(".upcoming-items");
+        if (!upcomingList) return;
+
+        const now = new Date();
+        const upcoming = this.notes
+            .filter(note => note.reminderActive && note.reminderDateTime instanceof Date && note.reminderDateTime > now && !note.reminderTriggered)
+            .sort((a, b) => a.reminderDateTime - b.reminderDateTime)
+            .slice(0, 5);
+
+        if (upcoming.length === 0) {
+            upcomingList.innerHTML = `<div class="upcoming-empty">No upcoming reminders</div>`;
+            return;
+        }
+
+        upcomingList.innerHTML = upcoming.map(note => {
+            const label = note.title ? note.title : "Untitled note";
+            const time = new Date(note.reminderDateTime).toLocaleString();
+            return `<div class="upcoming-item"><strong>${label}</strong><span>${time}</span></div>`;
+        }).join("");
     };
 
 
@@ -112,6 +294,9 @@ class App {
     // };
 
     openModal(event) {
+        const isColorControl = event.target.closest(".color");
+        if (isColorControl) return;
+
         const $selectedNote = event.target.closest(".note");
         if ($selectedNote) {
             const titleEl = $selectedNote.querySelector(".title");
@@ -120,6 +305,11 @@ class App {
             this.currentNoteId = $selectedNote.id;
             this.$modalTitle.value = titleEl ? titleEl.innerHTML : "";
             this.$modalText.value = textEl ? textEl.innerHTML : "";
+
+            const note = this.notes.find(item => item.id === this.currentNoteId);
+            if (note) {
+                this.setModalReminderValues(note);
+            }
 
             this.$modal.classList.add("open-modal");
             console.log("Modal opened");
@@ -142,26 +332,29 @@ class App {
         if (!this.currentNoteId) return;
         const title = this.$modalTitle.value;
         const text = this.$modalText.value;
+        const { reminderDateTime, reminderActive } = this.getReminderInputValues(false);
 
-        this.editNote(this.currentNoteId, { title, text });
+        this.editNote(this.currentNoteId, { title, text, reminderDateTime, reminderActive });
         this.displayNotes();
+        this.displayUpcomingReminders();
     };
 
 
 
-    addNote({ title, text }) {
+    addNote({ title, text, reminderDateTime, reminderActive }) {
         if (text != "") {
-            const newNote = new Note(cuid(), title, text);
+            const newNote = new Note(cuid(), title, text, reminderDateTime, reminderActive, false);
             this.notes = [...this.notes, newNote];
             this.displayNotes();
+            this.displayUpcomingReminders();
             this.saveNotes();
         }
     };
 
-    editNote(id, { title, text }) {
+    editNote(id, { title, text, reminderDateTime, reminderActive }) {
         this.notes = this.notes.map(note => {
             if (note.id == id) {
-                return new Note(note.id, title, text);
+                return new Note(note.id, title, text, reminderDateTime, reminderActive, false);
             }
             return note;
         });
@@ -177,10 +370,14 @@ class App {
     };
 
     displayNotes() {
-        this.$notes.innerHTML = this.notes.map(note =>
-            `
+        this.$notes.innerHTML = this.notes.map(note => {
+            const reminderDate = note.reminderDateTime ? new Date(note.reminderDateTime) : null;
+            const reminderLabel = note.reminderActive && reminderDate ? `<div class="note-reminder">Reminder: ${reminderDate.toLocaleString()}</div>` : "";
+            const isReminderDue = note.reminderActive && reminderDate instanceof Date && !isNaN(reminderDate) && new Date() >= reminderDate;
+            const noteClass = isReminderDue ? "notes-box border note reminder-due" : "notes-box border note";
+            return `
             
-            <div id="${note.id}" class="notes-box border note">
+            <div id="${note.id}" class="${noteClass}">
 
                     <div class="notes-top">
 
@@ -196,6 +393,7 @@ class App {
 
                             <div class="title">${note.title} </div>
                             <div class="text">${note.text}</div>
+                            ${reminderLabel}
 
                         </div>
 
@@ -211,7 +409,7 @@ class App {
 
                     <div id="nTools" class="notes-bottom">
 
-                        <div class="notes-tools toolsDark">
+                        <div class="notes-tools toolsDark color">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                 fill="#e3e3e3">
                                 <path
@@ -243,7 +441,7 @@ class App {
                             </svg>
                         </div>
 
-                        <div class="notes-tools toolsDark">
+                        <div class="notes-tools toolsDark archive-btn" data-action="archive">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                 fill="#e3e3e3">
                                 <path
@@ -263,8 +461,8 @@ class App {
 
                 </div>
 
-            `
-        ).join("");
+            `;
+        }).join("");
     };
 
 
@@ -283,6 +481,28 @@ const updatedNote = {
 };
 
 const app = new App();
+
+const themeBtn = document.querySelector('.theme-btn');
+
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+}
+
+const updateThemeButton = () => {
+    if (!themeBtn) return;
+    themeBtn.textContent = document.body.classList.contains('dark-mode') ? '🌞' : '🌙';
+};
+
+updateThemeButton();
+
+if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateThemeButton();
+    });
+}
+
 // app.addNote(1, note1);
 // app.addNote(2, note1);
 // app.addNote(3, note1);
@@ -340,6 +560,26 @@ sideBar.addEventListener("mouseout", () => {
 });
 
 
+
+// colour coding notes in dark and light mode
+const colorButtons = document.querySelectorAll(".color");
+
+colorButtons.forEach((colorButton) => {
+    colorButton.addEventListener("click", () => {
+        const noteBox = colorButton.closest(".note");
+        if (!noteBox) return;
+
+        const isChanged = noteBox.style.backgroundColor === "rgb(243, 159, 118)" || noteBox.style.backgroundColor === "#F39F76";
+
+        if (document.body.classList.contains("dark-mode")) {
+            // In dark mode use default dark styling when resetting
+            noteBox.style.backgroundColor = isChanged ? "" : "#F39F76";
+        } else {
+            // In light mode toggle between white and the accent color
+            noteBox.style.backgroundColor = isChanged ? "#fff" : "#F39F76";
+        }
+    });
+});
 
 
 

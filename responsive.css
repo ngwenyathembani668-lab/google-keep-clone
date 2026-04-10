@@ -1,14 +1,15 @@
-@media (min-width: 1600px) {
-  
+@media (max-width: 1600px) {
+
     .modal-box {
         padding: 5% 57% 0 31%;
+        /* width: 35rem;  */
     }
 
 }
 
 
-@media (min-width: 1200px) {
- 
+@media (max-width: 1200px) {
+
     .middle-div form {
         width: 27rem;
     }
@@ -17,17 +18,177 @@
         margin-right: 40px;
     }
 
+    .modal {
+        width: 35rem;
+    }
+
+    #modal-title,
+    #modal-text {
+        width: 29rem;
+    }
+
 }
 
 
-@media (min-width: 900px) {
-  
+@media (max-width: 900px) {
+
     .middle-div form {
-        width: 16rem;
+        width: 14rem;
     }
 
     .left-div {
         margin-right: 25px;
+    }
+
+    .modal {
+        width: 30rem;
+        height: 11rem;
+    }
+
+    .modal-box {
+        padding: 5% 67% 0 27%;
+    }
+
+    .tool-box {
+        width: 14rem;
+    }
+
+    #modal-title,
+    #modal-text {
+        width: 19rem;
+    }
+
+    #take-note,
+    #sec-form {
+        width: 29rem;
+    }
+
+    #takeNotes,
+    #note-text,
+    #note-title {
+        width: 17rem;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    #take-note,
+    #sec-form {
+        width: 22rem;
+    }
+
+    #takeNotes {
+        width: 8rem;
+    }
+
+    .modal-box {
+        padding: 5% 72% 0 23%;
+    }
+
+}
+
+
+@media (max-width: 434px) {
+
+    .middle-div {
+        display: none;
+    }
+
+    .nav-options {
+        width: 25px;
+        height: 25px;
+    }
+
+    .menu-btn {
+        width: 25px;
+        height: 25px;
+    }
+
+    aside {
+        width: 50px;
+    }
+
+    .sideBarBtn {
+        padding-left: 12px;
+    }
+
+    #sideBar {
+        display: none;
+    }
+
+    #sideBar-M {
+        display: block;
+    }
+
+    .side-BarBtn {
+        display: flex;
+        align-items: center;
+        /* justify-content: center; */
+        width: 100%;
+        padding-left: 12px;
+        gap: 30px;
+        border-radius: 100%;
+        height: 50px;
+        /* background-color: #DADCE0; */
+    }
+
+    .modal {
+        width: 18rem;
+        height: 9rem;
+    }
+
+    .modal-box {
+        padding: 5% 83% 0 16%;
+    }
+
+    .tool-box {
+        padding-left: 6px;
+    }
+
+    #modal-title,
+    #modal-text {
+        width: 12rem;
+    }
+
+    .input-tools svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .close-btn button {
+        width: 45px;
+        font-size: 0.7rem;
+        padding-right: 0;
+    }
+
+    #take-note,
+    #sec-form {
+        width: 18rem;
+    }
+
+    #note-text,
+    #note-title {
+        width: 12rem; 
+    }
+
+    #takeNotes {
+        width: 9rem;
+    }
+
+    .tools-svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .left-div {
+        gap: 5px;
+    }
+
+    .logo-img img {
+        width: 30px;
+        height: 30px;
     }
 
 }
